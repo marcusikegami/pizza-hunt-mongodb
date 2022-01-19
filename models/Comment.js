@@ -36,13 +36,20 @@ const CommentSchema = new Schema({
     default: Date.now,
     get: createdAtVal => dateFormat(createdAtVal)
   },
+
   replies: [ReplySchema]
 },
 {
   toJSON: {
-    getters: true
-  }
+    getters: true,
+    virtuals: true
+  },
+  id: false
 });
+CommentSchema.virtual('replyCount').get(function() {
+  return this.replies.length;
+});
+
 
 const Comment = model('Comment', CommentSchema);
 const Reply = model('Reply', ReplySchema);
